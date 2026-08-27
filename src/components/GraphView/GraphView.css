@@ -1,17 +1,22 @@
 .graph {
   position: relative;
   width: 100%;
-  height: clamp(520px, 78vh, 780px);
+  height: clamp(500px, 72vh, 720px);
   background:
     radial-gradient(120% 80% at 50% 0%, rgba(77, 225, 255, 0.06), transparent 60%),
     var(--bg-panel);
   overflow: hidden;
   touch-action: none;
+  overscroll-behavior: contain;
+}
+
+.graph__canvas {
+  touch-action: none;
 }
 
 @media (max-width: 560px) {
   .graph {
-    height: clamp(400px, 60vh, 520px);
+    height: clamp(380px, 56vh, 480px);
   }
 }
 
@@ -106,6 +111,68 @@
 .graph__tool:hover {
   color: var(--accent);
   border-color: var(--border-bright);
+}
+
+/* панель масштаба */
+.graph__zoom {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 3px;
+  background: rgba(8, 11, 19, 0.72);
+  backdrop-filter: blur(8px);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+}
+
+.graph__zoom-btn {
+  width: 26px;
+  height: 26px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 1rem;
+  line-height: 1;
+  color: var(--text-dim);
+  border: 1px solid transparent;
+  border-radius: 2px;
+  transition: all var(--t-fast);
+}
+.graph__zoom-btn:hover {
+  color: var(--accent);
+  border-color: var(--border-bright);
+  background: var(--accent-soft);
+}
+.graph__zoom-fit {
+  font-size: 0.82rem;
+}
+
+.graph__zoom-field {
+  display: inline-flex;
+  align-items: center;
+  gap: 1px;
+  padding: 0 3px;
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  color: var(--text-dim);
+}
+.graph__zoom-input {
+  width: 30px;
+  padding: 0;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: var(--text-hi);
+  font: inherit;
+  text-align: right;
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+.graph__zoom-input::-webkit-outer-spin-button,
+.graph__zoom-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 .graph__hint {
@@ -255,5 +322,9 @@
   }
   .graph__tool-text {
     display: none;
+  }
+  .graph__zoom-btn {
+    width: 30px;
+    height: 30px;
   }
 }

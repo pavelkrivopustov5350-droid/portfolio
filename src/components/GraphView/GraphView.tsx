@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
-  forceCenter,
   forceCollide,
   forceLink,
   forceManyBody,
@@ -42,6 +41,9 @@ const KIND_ORDER: NodeKind[] = [
   "outcome",
 ];
 
+const ZOOM_MIN = 0.4;
+const ZOOM_MAX = 4;
+
 export default function GraphView({ nodes, links, onOpenCase }: Props) {
   const wrapRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -53,6 +55,8 @@ export default function GraphView({ nodes, links, onOpenCase }: Props) {
 
   const kindColor = useRef<Record<string, string>>({});
   const view = useRef<View>({ x: 0, y: 0, k: 1 });
+  const fitK = useRef(1); // масштаб «вписать в экран»
+  const zoom = useRef(1); // множитель поверх fitK, которым управляет пользователь
   const sim = useRef<Simulation<SimNode, SimLink> | null>(null);
   const fitRef = useRef<() => void>(() => {});
   const interacted = useRef(false);
@@ -64,6 +68,8 @@ export default function GraphView({ nodes, links, onOpenCase }: Props) {
     () => new Set(KIND_ORDER),
   );
   const [hint, setHint] = useState(true);
+  const [zoomPct, setZoomPct] = useState(100);
+  const [zoomInput, setZoomInput] = useState("100");
 
   const dragNode = useRef<SimNode | null>(null);
   const panning = useRef(false);
@@ -79,6 +85,8 @@ export default function GraphView({ nodes, links, onOpenCase }: Props) {
   highlightRef.current = highlight;
   const activeKindsRef = useRef(activeKinds);
   activeKindsRef.current = activeKinds;
+
+  useEffect(() => setZoomInput(String(zoomPct)), [zoomPct]);
 
   /* ---------- координаты ---------- */
   const toScreen = (wx: number, wy: number) => {
@@ -98,7 +106,7 @@ export default function GraphView({ nodes, links, onOpenCase }: Props) {
       for (const n of simNodes) {
         if (!activeKindsRef.current.has(n.kind)) continue;
         const d = Math.hypot(n.x - w.x, n.y - w.y);
-        const r = radiusFor(n) + 6 / view.current.k;
+        const r = radiusFor(n) + 8 / view.current.k;
         if (d < r && d < bestD) {
           best = n;
           bestD = d;
@@ -126,59 +134,78 @@ export default function GraphView({ nodes, links, onOpenCase }: Props) {
     const k = view.current.k;
     const narrow = W < 560;
 
-    for (const l of simLinks) {
-      const s = l.source;
-      const t = l.target;
-      if (!kinds.has(s.kind) || !kinds.has(t.kind)) continue;
-      const a = toScreen(s.x, s.y);
-      const b = toScreen(t.x, t.y);
-      const lit = hl ? hl.has(s.id) && hl.has(t.id) : false;
-      const dim = hl && !lit;
+    // изогнутая дуга между узлами: меньше визуальной «каши» на пересечениях
+    const drawLink = (l: SimLink, lit: boolean, dim: boolean) => {
+      const a = toScreen(l.source.x, l.source.y);
+      const b = toScreen(l.target.x, l.target.y);
+      const mx = (a.x + b.x) / 2;
+      const my = (a.y + b.y) / 2;
+      const dx = b.x - a.x;
+      const dy = b.y - a.y;
+      const len = Math.hypot(dx, dy) || 1;
+      const bow = Math.min(len * 0.11, 32);
+      const cx = mx + (-dy / len) * bow;
+      const cy = my + (dx / len) * bow;
+
       ctx.save();
-      ctx.setLineDash(LINK_DASH[l.kind].map((n) => n * k));
+      ctx.setLineDash(lit ? LINK_DASH[l.kind].map((n) => n * k) : []);
       ctx.strokeStyle = lit
-        ? "rgba(77, 225, 255, 0.8)"
+        ? "rgba(90, 220, 255, 0.85)"
         : dim
-          ? "rgba(120, 140, 170, 0.05)"
-          : "rgba(120, 150, 190, 0.2)";
-      ctx.lineWidth = lit ? 1.6 : 1;
+          ? "rgba(120, 140, 170, 0.04)"
+          : "rgba(140, 165, 205, 0.16)";
+      ctx.lineWidth = lit ? 1.8 : 1;
       ctx.beginPath();
       ctx.moveTo(a.x, a.y);
-      ctx.lineTo(b.x, b.y);
+      ctx.quadraticCurveTo(cx, cy, b.x, b.y);
       ctx.stroke();
 
-      if (!dim) {
-        const ang = Math.atan2(b.y - a.y, b.x - a.x);
-        const tr = radiusFor(t) * k + 4;
+      // стрелка направления — только на подсветке или при крупном зуме
+      if (!dim && (lit || k > 1.25)) {
+        const tr = radiusFor(l.target) * k + 3;
+        const ang = Math.atan2(b.y - cy, b.x - cx);
         const hx = b.x - Math.cos(ang) * tr;
         const hy = b.y - Math.sin(ang) * tr;
-        const size = lit ? 7 : 5;
-        ctx.fillStyle = lit
-          ? "rgba(77, 225, 255, 0.9)"
-          : "rgba(120, 150, 190, 0.28)";
+        const s = lit ? 7 : 4.5;
         ctx.setLineDash([]);
+        ctx.fillStyle = lit
+          ? "rgba(90, 220, 255, 0.95)"
+          : "rgba(140, 165, 205, 0.4)";
         ctx.beginPath();
         ctx.moveTo(hx, hy);
-        ctx.lineTo(hx - Math.cos(ang - 0.4) * size, hy - Math.sin(ang - 0.4) * size);
-        ctx.lineTo(hx - Math.cos(ang + 0.4) * size, hy - Math.sin(ang + 0.4) * size);
+        ctx.lineTo(hx - Math.cos(ang - 0.42) * s, hy - Math.sin(ang - 0.42) * s);
+        ctx.lineTo(hx - Math.cos(ang + 0.42) * s, hy - Math.sin(ang + 0.42) * s);
         ctx.closePath();
         ctx.fill();
       }
 
-      if (lit && l.label && k > 0.7) {
-        const mx = (a.x + b.x) / 2;
-        const my = (a.y + b.y) / 2;
+      if (lit && l.label && k > 0.55) {
+        const lx = mx + (-dy / len) * (bow + 7);
+        const ly = my + (dx / len) * (bow + 7);
         ctx.setLineDash([]);
         ctx.font = "10px 'JetBrains Mono', monospace";
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
         const tw = ctx.measureText(l.label).width;
-        ctx.fillStyle = "rgba(6, 10, 18, 0.92)";
-        ctx.fillRect(mx - tw / 2 - 5, my - 8, tw + 10, 16);
-        ctx.fillStyle = "rgba(180, 235, 255, 0.92)";
-        ctx.fillText(l.label, mx, my);
+        ctx.fillStyle = "rgba(6, 10, 18, 0.94)";
+        ctx.fillRect(lx - tw / 2 - 5, ly - 8, tw + 10, 16);
+        ctx.fillStyle = "rgba(190, 238, 255, 0.95)";
+        ctx.fillText(l.label, lx, ly);
       }
       ctx.restore();
+    };
+
+    const vis = (l: SimLink) =>
+      kinds.has(l.source.kind) && kinds.has(l.target.kind);
+    if (hl) {
+      for (const l of simLinks)
+        if (vis(l) && !(hl.has(l.source.id) && hl.has(l.target.id)))
+          drawLink(l, false, true);
+      for (const l of simLinks)
+        if (vis(l) && hl.has(l.source.id) && hl.has(l.target.id))
+          drawLink(l, true, false);
+    } else {
+      for (const l of simLinks) if (vis(l)) drawLink(l, false, false);
     }
 
     for (const n of simNodes) {
@@ -191,10 +218,10 @@ export default function GraphView({ nodes, links, onOpenCase }: Props) {
       const isHover = hoverId.current === n.id || pinnedId === n.id;
 
       ctx.save();
-      ctx.globalAlpha = dim ? 0.22 : 1;
+      ctx.globalAlpha = dim ? 0.2 : 1;
       if (!dim) {
         ctx.shadowColor = col;
-        ctx.shadowBlur = isHover ? 26 : lit ? 16 : 8;
+        ctx.shadowBlur = isHover ? 26 : lit ? 16 : 7;
       }
 
       ctx.beginPath();
@@ -227,9 +254,9 @@ export default function GraphView({ nodes, links, onOpenCase }: Props) {
       ctx.fillStyle = col;
       ctx.fill();
 
+      // по умолчанию подписаны только проекты — остальное по зуму / наведению
       const showLabel =
-        !dim &&
-        (lit || (!narrow && (k > 0.72 || n.kind === "project")));
+        !dim && (lit || (!narrow && (n.kind === "project" || k > 0.95)));
       if (showLabel) {
         ctx.font =
           n.kind === "project"
@@ -238,14 +265,13 @@ export default function GraphView({ nodes, links, onOpenCase }: Props) {
         ctx.textAlign = "center";
         ctx.textBaseline = "top";
         const tw = ctx.measureText(n.label).width;
-        // держим подпись внутри канвы, чтобы не обрезалась у края
         const lx = Math.max(tw / 2 + 6, Math.min(W - tw / 2 - 6, p.x));
         const ly = Math.min(p.y + r + 6, H - 30);
-        ctx.fillStyle = "rgba(6, 10, 18, 0.8)";
+        ctx.fillStyle = "rgba(6, 10, 18, 0.82)";
         ctx.fillRect(lx - tw / 2 - 4, ly - 2, tw + 8, 16);
-        ctx.fillStyle = lit ? "#eaf6ff" : "rgba(200, 214, 232, 0.82)";
+        ctx.fillStyle = lit ? "#eaf6ff" : "rgba(205, 218, 235, 0.8)";
         ctx.fillText(n.label, lx, ly);
-        if (n.metric && (lit || k > 0.9)) {
+        if (n.metric && (lit || k > 1)) {
           ctx.font = "9px 'JetBrains Mono', monospace";
           ctx.fillStyle = col;
           ctx.fillText(n.metric, lx, ly + 15);
@@ -272,8 +298,9 @@ export default function GraphView({ nodes, links, onOpenCase }: Props) {
 
     simNodes.forEach((n, i) => {
       const ang = (i / simNodes.length) * Math.PI * 2;
-      n.x = Math.cos(ang) * 280 + (i % 2 ? 20 : -20);
-      n.y = Math.sin(ang) * 150;
+      const rad = 380 + (i % 3) * 60;
+      n.x = Math.cos(ang) * rad;
+      n.y = Math.sin(ang) * rad * 0.66;
       n.vx = 0;
       n.vy = 0;
       n.fx = null;
@@ -290,17 +317,21 @@ export default function GraphView({ nodes, links, onOpenCase }: Props) {
         forceLink<SimNode, SimLink>(simLinks)
           .id((d) => d.id)
           .distance((l) =>
-            l.source.kind === "project" || l.target.kind === "project" ? 150 : 104,
+            l.source.kind === "project" || l.target.kind === "project" ? 200 : 142,
           )
-          .strength(0.42),
+          .strength(0.3)
+          .iterations(2),
       )
-      .force("charge", forceManyBody<SimNode>().strength(-340).distanceMax(520))
-      .force("collide", forceCollide<SimNode>((d) => radiusFor(d) + 18))
-      .force("x", forceX<SimNode>(0).strength(0.028))
-      .force("y", forceY<SimNode>(0).strength(0.1))
-      .force("center", forceCenter(0, 0).strength(0.04))
+      .force("charge", forceManyBody<SimNode>().strength(-740).distanceMax(1100))
+      .force(
+        "collide",
+        forceCollide<SimNode>((d) => radiusFor(d) + 34).strength(1).iterations(3),
+      )
+      .force("x", forceX<SimNode>(0).strength(0.03))
+      .force("y", forceY<SimNode>(0).strength(0.085))
+      .velocityDecay(0.42)
       .alpha(1)
-      .alphaDecay(reduced ? 0.25 : 0.028);
+      .alphaDecay(reduced ? 0.25 : 0.023);
     sim.current = simulation;
 
     const fit = () => {
@@ -309,38 +340,35 @@ export default function GraphView({ nodes, links, onOpenCase }: Props) {
       if (!W || !H) return;
       const top =
         (wrap.querySelector<HTMLElement>(".graph__hud-top")?.offsetHeight ?? 44) +
-        18;
-      const bottom = W < 560 ? 30 : 52;
-      const side = W < 560 ? 46 : 96;
+        26;
+      const bottom = W < 560 ? 24 : 56;
+      const side = W < 560 ? 40 : 88;
 
       let minX = Infinity;
       let minY = Infinity;
       let maxX = -Infinity;
       let maxY = -Infinity;
       for (const n of simNodes) {
-        const r = radiusFor(n);
+        const r = radiusFor(n) + 10;
         minX = Math.min(minX, n.x - r);
         maxX = Math.max(maxX, n.x + r);
         minY = Math.min(minY, n.y - r);
-        maxY = Math.max(maxY, n.y + r + 24);
+        maxY = Math.max(maxY, n.y + r);
       }
       const bw = Math.max(maxX - minX, 1);
       const bh = Math.max(maxY - minY, 1);
       const availW = Math.max(W - side * 2, 60);
       const availH = Math.max(H - top - bottom, 60);
-      // На узком экране не уменьшаем сильнее порога — граф становится
-      // поверхностью для перетаскивания, лишнее просто уходит за край.
-      const minK = W < 560 ? 0.52 : 0.34;
-      const k = Math.max(
-        Math.min(availW / bw, availH / bh, 1.3),
-        minK,
-      );
-      const cx = (minX + maxX) / 2;
-      const cy = (minY + maxY) / 2;
+      const minK = W < 560 ? 0.5 : 0.32;
+      const base = Math.max(Math.min(availW / bw, availH / bh, 1.25), minK);
+      fitK.current = base;
+      const eff = base * zoom.current;
+      // центрируем в доступной области, но никогда не заезжаем под верхнюю
+      // панель и не уходим за левый край
       view.current = {
-        k,
-        x: W / 2 - cx * k,
-        y: top + availH * 0.46 - cy * k,
+        k: eff,
+        x: side + Math.max((availW - bw * eff) / 2, 0) - minX * eff,
+        y: top + Math.max((availH - bh * eff) / 2, 0) - minY * eff,
       };
     };
     fitRef.current = fit;
@@ -381,6 +409,56 @@ export default function GraphView({ nodes, links, onOpenCase }: Props) {
   };
   const cool = () => sim.current?.alphaTarget(0);
 
+  /* ---------- зум ---------- */
+  const applyZoom = useCallback(
+    (nextZoom: number, pivotX?: number, pivotY?: number) => {
+      const canvas = canvasRef.current;
+      if (!canvas) return;
+      const z = Math.min(Math.max(nextZoom, ZOOM_MIN), ZOOM_MAX);
+      const v = view.current;
+      const newK = fitK.current * z;
+      if (!newK || !v.k) return;
+      const px = pivotX ?? canvas.clientWidth / 2;
+      const py = pivotY ?? canvas.clientHeight / 2;
+      view.current = {
+        k: newK,
+        x: px - (px - v.x) * (newK / v.k),
+        y: py - (py - v.y) * (newK / v.k),
+      };
+      zoom.current = z;
+      interacted.current = true;
+      setHint(false);
+      setZoomPct(Math.round(z * 100));
+      draw();
+    },
+    [draw],
+  );
+
+  // wheel вешаем вручную с { passive: false } — иначе React не даёт
+  // остановить прокрутку страницы, и она едет вместе с зумом.
+  const wheelRef = useRef<(e: WheelEvent) => void>(() => {});
+  wheelRef.current = (e: WheelEvent) => {
+    e.preventDefault();
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const rect = canvas.getBoundingClientRect();
+    const factor = Math.exp(-e.deltaY * 0.0012);
+    applyZoom(zoom.current * factor, e.clientX - rect.left, e.clientY - rect.top);
+  };
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const handler = (e: WheelEvent) => wheelRef.current(e);
+    canvas.addEventListener("wheel", handler, { passive: false });
+    return () => canvas.removeEventListener("wheel", handler);
+  }, []);
+
+  const commitZoomInput = () => {
+    const parsed = parseInt(zoomInput.replace(/[^\d]/g, ""), 10);
+    if (Number.isFinite(parsed)) applyZoom(parsed / 100);
+    else setZoomInput(String(zoomPct));
+  };
+
   /* ---------- указатель ---------- */
   const onPointerDown = (e: React.PointerEvent) => {
     (e.target as Element).setPointerCapture?.(e.pointerId);
@@ -409,7 +487,7 @@ export default function GraphView({ nodes, links, onOpenCase }: Props) {
     tooltipPos.current = {
       x: sx,
       y: sy,
-      flip: sx > rect.width - 290,
+      flip: sx > rect.width - 320,
     };
 
     if (dragNode.current) {
@@ -464,26 +542,20 @@ export default function GraphView({ nodes, links, onOpenCase }: Props) {
     (e.target as Element).releasePointerCapture?.(e.pointerId);
   };
 
-  const onWheel = (e: React.WheelEvent) => {
-    e.preventDefault();
-    interacted.current = true;
-    setHint(false);
-    const rect = canvasRef.current!.getBoundingClientRect();
-    const sx = e.clientX - rect.left;
-    const sy = e.clientY - rect.top;
-    const v = view.current;
-    const factor = Math.exp(-e.deltaY * 0.0016);
-    const k = Math.min(Math.max(v.k * factor, 0.3), 3);
-    view.current = {
-      k,
-      x: sx - (sx - v.x) * (k / v.k),
-      y: sy - (sy - v.y) * (k / v.k),
-    };
+  // «вписать в экран» — сбросить зум и центрировать, без пересборки
+  const fitView = () => {
+    zoom.current = 1;
+    interacted.current = false;
+    setZoomPct(100);
+    fitRef.current();
     draw();
   };
 
+  // пересобрать граф с нуля
   const resetView = () => {
     interacted.current = false;
+    zoom.current = 1;
+    setZoomPct(100);
     setPinnedId(null);
     simNodes.forEach((n) => {
       n.fx = null;
@@ -521,7 +593,6 @@ export default function GraphView({ nodes, links, onOpenCase }: Props) {
             draw();
           }
         }}
-        onWheel={onWheel}
       />
 
       <div className="graph__hud-top">
@@ -547,11 +618,54 @@ export default function GraphView({ nodes, links, onOpenCase }: Props) {
             <span className="graph__tool-text">пересобрать</span>
           </button>
         </div>
+
+        <div className="graph__zoom">
+          <button
+            className="graph__zoom-btn"
+            onClick={() => applyZoom(zoom.current / 1.25)}
+            aria-label="Отдалить"
+          >
+            −
+          </button>
+          <span className="graph__zoom-field">
+            <input
+              className="graph__zoom-input"
+              value={zoomInput}
+              onChange={(e) => setZoomInput(e.target.value)}
+              onFocus={(e) => e.currentTarget.select()}
+              onBlur={commitZoomInput}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  commitZoomInput();
+                  e.currentTarget.blur();
+                }
+              }}
+              inputMode="numeric"
+              aria-label="Масштаб в процентах"
+            />
+            <span>%</span>
+          </span>
+          <button
+            className="graph__zoom-btn"
+            onClick={() => applyZoom(zoom.current * 1.25)}
+            aria-label="Приблизить"
+          >
+            +
+          </button>
+          <button
+            className="graph__zoom-btn graph__zoom-fit"
+            onClick={fitView}
+            title="Вписать в экран"
+            aria-label="Вписать в экран"
+          >
+            ⤢
+          </button>
+        </div>
       </div>
 
       {hint && (
         <div className="graph__hint mono">
-          тащи узлы · колесо — зум · клик по проекту открывает кейс
+          тащи узлы · колесо или ± — зум · клик по проекту открывает кейс
         </div>
       )}
 
