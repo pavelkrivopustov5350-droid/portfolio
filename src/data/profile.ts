@@ -98,10 +98,5 @@ export const profile: Profile = {
     { label: "Телефон", value: "+7 917 834-98-94", url: "tel:+79178349894" },
     { label: "Telegram", value: "@MainPavel", url: "https://t.me/MainPavel" },
     { label: "Email", value: "krivopustov00@mail.ru", url: "mailto:krivopustov00@mail.ru" },
-    {
-      label: "GitHub",
-      value: "исходник этого сайта",
-      url: "https://github.com/pavelkrivopustov5350-droid/portfolio",
-    },
   ],
 };

@@ -24,11 +24,11 @@ export default function Hero({ profile }: { profile: Profile }) {
         </div>
 
         <div className="hero__actions reveal">
-          <a href="#graph" className="btn btn--primary">
-            Открыть карту связей
-          </a>
-          <a href="#cases" className="btn btn--ghost">
+          <a href="#cases" className="btn btn--primary">
             Смотреть кейсы
+          </a>
+          <a href="#contact" className="btn btn--ghost">
+            Связаться
           </a>
         </div>
 

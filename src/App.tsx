@@ -5,7 +5,6 @@ import { useReveal } from "./hooks/useReveal";
 import Backdrop from "./components/Backdrop";
 import Nav from "./components/Nav";
 import Hero from "./components/Hero";
-import GraphView from "./components/GraphView/GraphView";
 import CaseIndex from "./components/CaseIndex";
 import CasePanel from "./components/CasePanel";
 import About from "./components/About";
@@ -15,7 +14,7 @@ import Footer from "./components/Footer";
 import "./App.css";
 
 export default function App() {
-  const { profile, cases, graph } = portfolio;
+  const { profile, cases } = portfolio;
   const { route, openCase, closeCase } = useHashRoute();
   useReveal();
 
@@ -31,27 +30,6 @@ export default function App() {
 
       <main>
         <Hero profile={profile} />
-
-        <section className="section graph-section" id="graph">
-          <div className="container">
-            <div className="section-head reveal">
-              <p className="eyebrow">Карта системы</p>
-              <h2>Связи между ролями и проектами</h2>
-              <p>
-                Пять ролей, каналы, команды и результаты — и общие нити между
-                ними: где начинался навык и куда он перешёл. Тащите узлы,
-                включайте слои, нажмите на проект, чтобы открыть кейс.
-              </p>
-            </div>
-          </div>
-          <div className="container graph-section__stage reveal">
-            <GraphView
-              nodes={graph.nodes}
-              links={graph.links}
-              onOpenCase={openCase}
-            />
-          </div>
-        </section>
 
         <section className="section cases-section" id="cases">
           <div className="container">

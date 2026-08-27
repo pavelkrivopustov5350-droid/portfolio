@@ -4,42 +4,6 @@
  * `profile.ts` и `projects.ts`. Больше нигде тексты править не нужно.
  */
 
-/** Категория узла в графе — задаёт цвет и форму. */
-export type NodeKind =
-  | "project" // продукт / направление
-  | "initiative" // отдельная инициатива внутри проекта
-  | "channel" // канал привлечения / роста
-  | "team" // команда / роль
-  | "outcome"; // достигнутый результат
-
-/** Тип связи между узлами графа. */
-export type LinkKind =
-  | "drives" // A двигает / усиливает B
-  | "depends" // A зависит от B
-  | "spawned" // из A выросло B
-  | "shares" // A и B делят ресурс / команду
-  | "informs"; // A даёт данные / инсайты для B
-
-export interface GraphNode {
-  id: string;
-  label: string;
-  kind: NodeKind;
-  /** Короткое пояснение — показывается в тултипе и боковой панели. */
-  summary?: string;
-  /** id кейса из `cases`, который открывается по клику. */
-  caseId?: string;
-  /** Ключевая метрика узла, напр. "+38% MRR". */
-  metric?: string;
-}
-
-export interface GraphLink {
-  source: string;
-  target: string;
-  kind: LinkKind;
-  /** Подпись связи, напр. "перформанс-трафик → онбординг". */
-  label?: string;
-}
-
 export interface CaseMetric {
   label: string;
   value: string;
@@ -110,5 +74,4 @@ export interface Profile {
 export interface PortfolioData {
   profile: Profile;
   cases: CaseStudy[];
-  graph: { nodes: GraphNode[]; links: GraphLink[] };
 }

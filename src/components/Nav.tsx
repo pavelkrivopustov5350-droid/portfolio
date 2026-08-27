@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import "./Nav.css";
 
 const LINKS = [
-  { href: "#graph", label: "Карта связей" },
   { href: "#cases", label: "Кейсы" },
   { href: "#about", label: "О себе" },
   { href: "#path", label: "Опыт" },
@@ -11,7 +10,7 @@ const LINKS = [
 
 export default function Nav({ name }: { name: string }) {
   const [scrolled, setScrolled] = useState(false);
-  const [active, setActive] = useState<string>("#graph");
+  const [active, setActive] = useState<string>("#cases");
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
