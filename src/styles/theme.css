@@ -1,0 +1,71 @@
+/* ============================================================
+   ТЕМА — тёмная, сай-фай. Все цвета и размеры — здесь.
+   ============================================================ */
+
+:root {
+  /* Фон: слои от самого глубокого к поверхности */
+  --bg-void: #05070d;
+  --bg-base: #080b13;
+  --bg-panel: #0c1019;
+  --bg-panel-2: #10151f;
+  --bg-elevated: #141a26;
+
+  /* Сетки и границы */
+  --grid-line: rgba(77, 225, 255, 0.06);
+  --grid-line-strong: rgba(77, 225, 255, 0.13);
+  --border: rgba(140, 170, 210, 0.14);
+  --border-bright: rgba(77, 225, 255, 0.32);
+
+  /* Текст */
+  --text-hi: #e8eef7;
+  --text: #aeb9cc;
+  --text-dim: #6b7689;
+  --text-faint: #454e5f;
+
+  /* Акценты */
+  --accent: #4de1ff; /* основной циан */
+  --accent-soft: rgba(77, 225, 255, 0.14);
+  --accent-2: #a06bff; /* фиолетовый */
+  --accent-3: #ff8a5c; /* оранжевый (Orbita) */
+  --accent-4: #ffcf5c; /* жёлтый (Karta) */
+  --danger: #ff5c7a;
+  --ok: #46e5a4;
+
+  /* Свечение */
+  --glow-accent: 0 0 24px rgba(77, 225, 255, 0.35);
+  --glow-soft: 0 0 40px rgba(77, 225, 255, 0.12);
+
+  /* Типографика */
+  --font-sans: "Space Grotesk", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", "SFMono-Regular", ui-monospace, "Cascadia Code",
+    Consolas, monospace;
+
+  /* Геометрия */
+  --radius: 4px;
+  --radius-lg: 8px;
+  --maxw: 1240px;
+  --gutter: clamp(16px, 4vw, 48px);
+
+  /* Тайминги */
+  --t-fast: 0.16s;
+  --t-med: 0.32s;
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* По категориям узлов графа (используется и в JS через getComputedStyle) */
+  --kind-project: #4de1ff;
+  --kind-initiative: #a06bff;
+  --kind-channel: #46e5a4;
+  --kind-team: #ff8a5c;
+  --kind-outcome: #ffcf5c;
+}
+
+/* Уважать запрос на снижение движения */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}

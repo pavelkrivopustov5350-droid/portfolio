@@ -1,0 +1,24 @@
+.footer {
+  border-top: 1px solid var(--border);
+  padding-block: 26px;
+  background: var(--bg-base);
+}
+.footer__inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  font-size: 0.72rem;
+  color: var(--text-faint);
+}
+.footer__sys b {
+  color: var(--ok);
+}
+.footer__top {
+  color: var(--text-dim);
+  transition: color var(--t-fast);
+}
+.footer__top:hover {
+  color: var(--accent);
+}

@@ -1,0 +1,21 @@
+.graph-section {
+  padding-bottom: clamp(48px, 8vh, 100px);
+}
+.graph-section__stage {
+  margin-top: 8px;
+}
+
+.cases-section {
+  padding-top: clamp(40px, 7vh, 90px);
+}
+
+/* тонкий разделитель между секциями */
+.section + .section::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: var(--gutter);
+  right: var(--gutter);
+  height: 1px;
+  background: linear-gradient(90deg, var(--border), transparent 70%);
+}
