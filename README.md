@@ -64,9 +64,11 @@ npm run typecheck  # проверка типов
 
 Сборка статическая, `base` = `./`, поэтому кладётся куда угодно.
 
+- **GitHub Pages**: настроен через `.github/workflows/deploy.yml` — при каждом push
+  в `main` собирается и публикуется на `https://<user>.github.io/portfolio/`.
+  Первый раз: Settings → Pages → Source → **GitHub Actions** (либо workflow включит
+  Pages сам при первом запуске).
 - **Netlify / Vercel**: подключить репозиторий, build `npm run build`, publish `dist`.
-- **GitHub Pages**: `npm run build`, отдать содержимое `dist/` (например через
-  `gh-pages`), либо Actions.
 - **Любой хостинг**: залить содержимое `dist/`.
 
 ## Структура
