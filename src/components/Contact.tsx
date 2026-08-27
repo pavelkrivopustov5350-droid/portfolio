@@ -9,11 +9,12 @@ export default function Contact({ profile }: { profile: Profile }) {
           <div className="contact__scan" aria-hidden="true" />
           <p className="eyebrow">Связь</p>
           <h2 className="contact__title">
-            Есть продукт, которому нужен рост как система?
+            Нужен человек на трафик, CRM и данные?
           </h2>
           <p className="contact__text">
-            Открыт к роли Growth / Product Lead, консультациям по growth-модели и
-            аудиту воронки. Пишите — отвечаю в течение дня.
+            Ищу роль Project / Growth Lead. Открыт к полной и проектной работе,
+            консультациям по закупке трафика, CRM-маркетингу и аналитике.
+            Предпочтительный способ связи — телефон или Telegram.
           </p>
 
           <div className="contact__links">

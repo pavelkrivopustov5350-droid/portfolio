@@ -8,7 +8,10 @@ export default function Timeline({ profile }: { profile: Profile }) {
         <div className="section-head reveal">
           <p className="eyebrow">Траектория</p>
           <h2>Путь</h2>
-          <p>От платного трафика в агентстве до сборки growth-функции с нуля.</p>
+          <p>
+            От инженерии и медиабаинга до запуска направления с нуля — каждая
+            роль добавляла слой: трафик, CRM, данные, проекты.
+          </p>
         </div>
 
         <ol className="tl">

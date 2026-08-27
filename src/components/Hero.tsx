@@ -6,7 +6,7 @@ export default function Hero({ profile }: { profile: Profile }) {
   return (
     <section className="hero" id="top">
       <div className="container hero__inner">
-        <p className="eyebrow reveal">Портфолио · система роста</p>
+        <p className="eyebrow reveal">Портфолио · трафик · CRM · данные</p>
 
         <h1 className="hero__title reveal">
           <GlitchText>{profile.name}</GlitchText>
@@ -19,7 +19,7 @@ export default function Hero({ profile }: { profile: Profile }) {
           <span className="mono">{profile.location}</span>
           <span className="hero__status">
             <span className="hero__dot" />
-            <span className="mono">доступен для новых проектов</span>
+            <span className="mono">открыт к предложениям</span>
           </span>
         </div>
 
