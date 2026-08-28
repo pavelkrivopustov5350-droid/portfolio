@@ -14,7 +14,8 @@ function CaseCard({
 }) {
   return (
     <button
-      className={`case-card reveal ${active ? "is-active" : ""}`}
+      className="case-card reveal"
+      data-active={active || undefined}
       onClick={onToggle}
       aria-expanded={active}
     >

@@ -28,7 +28,10 @@ export function useReveal() {
     const seen = new WeakSet<Element>();
     const scan = () => {
       document.querySelectorAll(".reveal:not(.in)").forEach((el) => {
-        if (!seen.has(el)) {
+        if (seen.has(el)) {
+          // элемент уже показывали — React мог перезаписать className, вернём
+          el.classList.add("in");
+        } else {
           seen.add(el);
           io.observe(el);
         }

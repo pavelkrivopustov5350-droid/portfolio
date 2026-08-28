@@ -51,7 +51,15 @@
   border: 1px solid var(--border);
   border-radius: var(--r-sm);
   padding: 20px 22px;
-  transition: border-color var(--dur-fast) var(--ease);
+  transition: border-color var(--dur-fast) var(--ease),
+    background var(--dur-fast) var(--ease);
+}
+.exp__card--btn {
+  cursor: pointer;
+}
+.exp__card--btn:hover {
+  border-color: var(--border-strong);
+  background: var(--surface-2);
 }
 .exp.is-open .exp__card {
   border-color: var(--border-strong);
@@ -65,8 +73,9 @@
   width: 100%;
   text-align: left;
 }
-.exp__head:disabled {
-  cursor: default;
+.exp__card--btn:hover .exp__toggle {
+  border-color: var(--accent-line);
+  color: var(--accent-bright);
 }
 .exp__role {
   font-family: var(--font-display);

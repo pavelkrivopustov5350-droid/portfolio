@@ -1,5 +1,7 @@
-/* section dividers — a barely-there hairline between sections */
-main > .section + .section::before {
+/* тонкая линия-разделитель между секциями */
+main > .section + .section::before,
+main > .process-wrap::before,
+main > .process-wrap + .section::before {
   content: "";
   position: absolute;
   top: 0;
@@ -7,4 +9,5 @@ main > .section + .section::before {
   right: var(--pad-x);
   height: 1px;
   background: linear-gradient(90deg, var(--border), transparent 65%);
+  z-index: 1;
 }

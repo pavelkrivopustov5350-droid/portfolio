@@ -44,10 +44,10 @@
   transform: translateY(-3px);
 }
 .case-card:hover::before,
-.case-card.is-active::before {
+.case-card[data-active]::before {
   transform: scaleY(1);
 }
-.case-card.is-active {
+.case-card[data-active] {
   border-color: var(--accent-line);
   background: var(--surface-2);
 }

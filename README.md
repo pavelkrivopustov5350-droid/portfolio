@@ -23,7 +23,11 @@ npm run typecheck  # проверка типов
 
 ## Структура секций
 
-`Hero → Impact / Key Metrics → Cases → Experience → Skills → Approach → Contact`
+`Hero → Impact / Key Metrics → Cases → Process → Experience → Skills → About → Approach → Contact`
+
+**Process** — scroll-driven «терминал»: по мере прокрутки собирается лог запуска
+маркетингового направления, прогресс-бар до 100% и финальный результат
+(компонент `Process.tsx`, шаги — в массиве `STEPS` внутри него).
 
 ## Где править контент
 
@@ -31,7 +35,7 @@ npm run typecheck  # проверка типов
 
 | Файл | Что внутри |
 | --- | --- |
-| `src/data/profile.ts` | Имя, титул, питч, ключевые метрики, карта навыков, подход, контакты |
+| `src/data/profile.ts` | Имя, титул, питч, метрики, навыки, подход, блок «О себе», контакты |
 | `src/data/cases.ts` | 4 главных кейса: метрики, challenge / approach / result, команда, pipeline-схема |
 | `src/data/experience.ts` | Таймлайн ролей + подпроекты LSR (FinBro, SMSLeads, CRMCalls, MoreZaim, LeadFin) |
 | `src/data/types.ts` | Описание всех полей |

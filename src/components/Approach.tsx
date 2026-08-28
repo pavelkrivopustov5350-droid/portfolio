@@ -3,7 +3,7 @@ import "./Approach.css";
 
 export default function Approach({ steps }: { steps: ApproachStep[] }) {
   return (
-    <section className="section approach-section" id="about">
+    <section className="section approach-section" id="approach">
       <div className="container">
         <div className="section-head reveal">
           <p className="eyebrow">About / Approach</p>

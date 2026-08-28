@@ -61,18 +61,36 @@ function Item({
   onToggle: () => void;
 }) {
   const expandable = !!(item.details || item.projects);
+
+  const handleClick = (e: React.MouseEvent) => {
+    if (!expandable) return;
+    // клики внутри раскрытого блока (подпроекты, ссылки) не сворачивают карточку
+    if ((e.target as HTMLElement).closest(".exp__detail")) return;
+    onToggle();
+  };
+  const handleKey = (e: React.KeyboardEvent) => {
+    if (!expandable) return;
+    if (e.target !== e.currentTarget) return;
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      onToggle();
+    }
+  };
+
   return (
     <li className={`exp ${open ? "is-open" : ""}`}>
       <span className="exp__node" aria-hidden="true" />
       <div className="exp__period tech">{item.period}</div>
 
-      <div className="exp__card">
-        <button
-          className="exp__head"
-          onClick={onToggle}
-          aria-expanded={open}
-          disabled={!expandable}
-        >
+      <div
+        className={`exp__card ${expandable ? "exp__card--btn" : ""}`}
+        onClick={handleClick}
+        onKeyDown={handleKey}
+        role={expandable ? "button" : undefined}
+        tabIndex={expandable ? 0 : undefined}
+        aria-expanded={expandable ? open : undefined}
+      >
+        <div className="exp__head">
           <div>
             <div className="exp__role">{item.role}</div>
             <div className="exp__company">
@@ -87,7 +105,7 @@ function Item({
               {open ? "–" : "+"}
             </span>
           )}
-        </button>
+        </div>
 
         <p className="exp__summary">{item.summary}</p>
 

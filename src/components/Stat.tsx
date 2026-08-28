@@ -1,8 +1,10 @@
 import type { Metric } from "../data/types";
 import { useCountUp } from "../hooks/useCountUp";
 
+const NBSP = " "; // узкий неразрывный пробел
+
 function group(n: number) {
-  return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
+  return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, NBSP);
 }
 
 /**
@@ -18,9 +20,10 @@ export default function Stat({ metric }: { metric: Metric }) {
   }
 
   const shown = metric.group ? group(value) : value.toString();
+  const prefix = metric.prefix ? metric.prefix.replace(/ $/, NBSP) : "";
   return (
     <span className="stat__value" ref={ref}>
-      {metric.prefix}
+      {prefix}
       {shown}
       {metric.suffix}
     </span>

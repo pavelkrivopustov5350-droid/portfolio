@@ -7,6 +7,7 @@ const NAV = [
   { href: "#cases", label: "Cases" },
   { href: "#experience", label: "Experience" },
   { href: "#skills", label: "Skills" },
+  { href: "#about", label: "About" },
   { href: "#contact", label: "Contact" },
 ];
 const IDS = NAV.map((n) => n.href.slice(1));

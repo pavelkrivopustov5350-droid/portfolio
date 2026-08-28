@@ -2,8 +2,8 @@ import { useEffect, useRef } from "react";
 import "./Backdrop.css";
 
 /**
- * Очень сдержанный фон: редкие светящиеся точки, тонкие связи между
- * близкими. Никакого мерцания и развёрток. Замирает при reduced-motion.
+ * Фон: геометрические плавающие точки + связи между близкими +
+ * вертикальная «развёртка» (полоска). Замирает при reduced-motion.
  */
 export default function Backdrop() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -24,12 +24,12 @@ export default function Backdrop() {
     let pts: P[] = [];
 
     const seed = () => {
-      const n = Math.min(Math.round((w * h) / 46000), 46);
+      const n = Math.min(Math.round((w * h) / 15000), 130);
       pts = Array.from({ length: n }, () => ({
         x: Math.random() * w,
         y: Math.random() * h,
-        vx: (Math.random() - 0.5) * 0.05,
-        vy: (Math.random() - 0.5) * 0.05,
+        vx: (Math.random() - 0.5) * 0.07,
+        vy: (Math.random() - 0.5) * 0.07,
         z: Math.random() * 0.6 + 0.4,
       }));
     };
@@ -46,11 +46,14 @@ export default function Backdrop() {
 
     let raf = 0;
     let last = performance.now();
+    let sweep = -240;
+
     const frame = (now: number) => {
       const dt = Math.min(now - last, 60);
       last = now;
       ctx.clearRect(0, 0, w, h);
 
+      // связи
       for (let i = 0; i < pts.length; i++) {
         const p = pts[i];
         p.x += p.vx * dt;
@@ -65,9 +68,9 @@ export default function Backdrop() {
           const dx = p.x - q.x;
           const dy = p.y - q.y;
           const d2 = dx * dx + dy * dy;
-          if (d2 < 150 * 150) {
-            const o = (1 - Math.sqrt(d2) / 150) * 0.08;
-            ctx.strokeStyle = `rgba(120, 150, 220, ${o})`;
+          if (d2 < 132 * 132) {
+            const o = (1 - Math.sqrt(d2) / 132) * 0.14;
+            ctx.strokeStyle = `rgba(120, 150, 235, ${o})`;
             ctx.lineWidth = 1;
             ctx.beginPath();
             ctx.moveTo(p.x, p.y);
@@ -76,11 +79,30 @@ export default function Backdrop() {
           }
         }
       }
+
+      // точки
       for (const p of pts) {
         ctx.beginPath();
-        ctx.arc(p.x, p.y, p.z * 1.5, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(130, 165, 255, ${0.12 + p.z * 0.18})`;
+        ctx.arc(p.x, p.y, p.z * 1.7, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(150, 178, 255, ${0.22 + p.z * 0.34})`;
         ctx.fill();
+      }
+
+      // вертикальная развёртка — полоска
+      if (!reduced) {
+        sweep += dt * 0.05;
+        if (sweep > h + 240) sweep = -240;
+        const grd = ctx.createLinearGradient(0, sweep - 220, 0, sweep);
+        grd.addColorStop(0, "rgba(77, 124, 255, 0)");
+        grd.addColorStop(1, "rgba(77, 124, 255, 0.06)");
+        ctx.fillStyle = grd;
+        ctx.fillRect(0, sweep - 220, w, 220);
+        ctx.strokeStyle = "rgba(123, 160, 255, 0.16)";
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(0, sweep);
+        ctx.lineTo(w, sweep);
+        ctx.stroke();
       }
 
       if (!reduced) raf = requestAnimationFrame(frame);

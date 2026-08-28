@@ -82,6 +82,14 @@ export interface ApproachStep {
   text: string;
 }
 
+export interface AboutData {
+  lead: string;
+  paragraphs: string[];
+  ai: string;
+  facts: { value: string; label: string }[];
+  footnote: string;
+}
+
 export interface Contact {
   kind: "phone" | "telegram" | "email";
   label: string;
@@ -103,5 +111,6 @@ export interface Profile {
   metrics: Metric[];
   skills: SkillGroup[];
   approach: ApproachStep[];
+  about: AboutData;
   contacts: Contact[];
 }
