@@ -143,7 +143,7 @@ function Item({
 }
 
 export default function Experience({ items }: { items: ExperienceItem[] }) {
-  const [openId, setOpenId] = useState<string | null>(items[0]?.id ?? null);
+  const [openId, setOpenId] = useState<string | null>(null);
 
   return (
     <section className="section exp-section" id="experience">

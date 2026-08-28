@@ -14,7 +14,7 @@ const STEPS: { cmd: string; out: string }[] = [
   { cmd: "scale --volume --keep-roi", out: "масштабирование объёма без потери экономики" },
 ];
 
-const FINAL = "направление запущено — прибыльное и масштабируемое";
+const FINAL = "направление запущено";
 const DURATION = 4600; // мс на всю последовательность
 const BAR_END = 0.88; // прогресс-бар достигает 100% на этой доле
 
@@ -89,12 +89,24 @@ export default function Process() {
             <span className="term__title tech">
               launch.sh — marketing direction
             </span>
-            <button
-              className="term__replay"
-              onClick={play}
-              aria-label="Запустить заново"
-            >
-              ⟳
+            <button className="term__replay" onClick={play}>
+              <svg
+                viewBox="0 0 24 24"
+                width="13"
+                height="13"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M3 12a9 9 0 0 1 15-6.7L21 8" />
+                <path d="M21 3v5h-5" />
+                <path d="M21 12a9 9 0 0 1-15 6.7L3 16" />
+                <path d="M3 21v-5h5" />
+              </svg>
+              повторить
             </button>
           </div>
 

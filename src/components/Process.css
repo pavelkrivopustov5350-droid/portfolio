@@ -82,21 +82,28 @@
 }
 .term__replay {
   margin-left: auto;
-  width: 30px;
-  height: 30px;
-  display: grid;
-  place-items: center;
-  font-size: 1rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 6px 12px;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
   color: var(--text-muted);
   border: 1px solid var(--border);
   border-radius: 8px;
-  transition: all var(--dur-fast) var(--ease);
+  transition:
+    color var(--dur-fast) var(--ease),
+    border-color var(--dur-fast) var(--ease),
+    background var(--dur-fast) var(--ease);
 }
 .term__replay:hover {
   color: var(--accent-bright);
   border-color: var(--accent-line);
   background: var(--accent-soft);
-  transform: rotate(-90deg);
+}
+.term__replay svg {
+  flex: none;
 }
 
 .term__body {

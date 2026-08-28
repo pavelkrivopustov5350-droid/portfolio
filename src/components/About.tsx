@@ -10,17 +10,19 @@ export default function About({ data }: { data: AboutData }) {
           <h2>О себе</h2>
         </div>
 
-        <div className="about-text reveal">
+        <div className="about-grid reveal">
           <p className="about-lead">{data.lead}</p>
-          {data.paragraphs.map((p, i) => (
-            <p key={i} className="about-p">
-              {p}
-            </p>
-          ))}
 
-          <div className="about-ai">
-            <span className="tech">AI &amp; AUTOMATION</span>
-            <p>{data.ai}</p>
+          <div className="about-body">
+            {data.paragraphs.map((p, i) => (
+              <p key={i} className="about-p">
+                {p}
+              </p>
+            ))}
+            <p className="about-p">
+              <span className="about-ai-label tech">AI &amp; AUTOMATION — </span>
+              {data.ai}
+            </p>
           </div>
         </div>
       </div>
