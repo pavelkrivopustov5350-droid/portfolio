@@ -1,7 +1,5 @@
 /* тонкая линия-разделитель между секциями */
-main > .section + .section::before,
-main > .process-wrap::before,
-main > .process-wrap + .section::before {
+main > .section + .section::before {
   content: "";
   position: absolute;
   top: 0;

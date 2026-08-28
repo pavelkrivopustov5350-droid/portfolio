@@ -86,8 +86,6 @@ export interface AboutData {
   lead: string;
   paragraphs: string[];
   ai: string;
-  facts: { value: string; label: string }[];
-  footnote: string;
 }
 
 export interface Contact {
