@@ -1,0 +1,59 @@
+.approach-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+
+.approach {
+  padding: 30px 26px;
+  border: 1px solid var(--border);
+  border-radius: var(--r);
+  background: var(--surface);
+  position: relative;
+  overflow: hidden;
+}
+.approach::after {
+  content: "";
+  position: absolute;
+  right: -40px;
+  top: -40px;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--accent-soft), transparent 70%);
+}
+.approach__index {
+  color: var(--accent);
+}
+.approach__title {
+  margin: 14px 0 12px;
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+.approach__text {
+  color: var(--text-muted);
+  font-size: 0.94rem;
+  line-height: 1.6;
+}
+
+.approach-eq {
+  margin-top: 40px;
+  text-align: center;
+  font-family: var(--font-display);
+  font-size: clamp(1.2rem, 3vw, 1.9rem);
+  font-weight: 600;
+  color: var(--text);
+  letter-spacing: 0.01em;
+}
+.approach-eq span {
+  color: var(--accent);
+  margin: 0 8px;
+}
+
+@media (max-width: 780px) {
+  .approach-grid {
+    grid-template-columns: 1fr;
+  }
+}

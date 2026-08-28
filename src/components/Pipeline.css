@@ -1,0 +1,111 @@
+.pl {
+  margin: 0;
+}
+.pl__title {
+  display: block;
+  margin-bottom: 18px;
+  color: var(--accent);
+}
+
+.pl__body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* merge: параллельные входы */
+.pl__merge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.pl__inputs {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.pl__merge-line {
+  width: 1px;
+  height: 26px;
+  margin-top: 6px;
+  background: linear-gradient(var(--accent-line), var(--border));
+}
+
+.pl__flow {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+}
+
+.pl__step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.pl__link {
+  width: 1px;
+  height: 22px;
+  background: linear-gradient(var(--border), var(--accent-line));
+  position: relative;
+}
+.pl__link::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -1px;
+  width: 5px;
+  height: 5px;
+  border-right: 1px solid var(--accent-line);
+  border-bottom: 1px solid var(--accent-line);
+  transform: translateX(-50%) rotate(45deg);
+}
+.pl__link--dash {
+  background: none;
+  border-left: 1px dashed var(--border-strong);
+  height: 26px;
+}
+
+.pl__node {
+  display: inline-flex;
+  align-items: center;
+  padding: 9px 16px;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  color: var(--text);
+  background: var(--surface-2);
+  border: 1px solid var(--border-strong);
+  border-radius: 999px;
+  white-space: nowrap;
+  transition: border-color var(--dur-fast) var(--ease), color var(--dur-fast);
+}
+.pl__node:hover {
+  border-color: var(--accent-line);
+  color: var(--accent-bright);
+}
+.pl__node--input {
+  background: var(--surface);
+  color: var(--text-muted);
+}
+.pl__node--loop {
+  border-style: dashed;
+  color: var(--text-muted);
+  gap: 6px;
+}
+.pl__loop-note {
+  margin-top: 8px;
+  font-size: 0.72rem;
+  color: var(--text-faint);
+}
+
+@media (max-width: 460px) {
+  .pl__node {
+    font-size: 0.66rem;
+    padding: 8px 12px;
+  }
+}

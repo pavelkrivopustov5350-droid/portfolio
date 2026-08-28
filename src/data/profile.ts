@@ -1,102 +1,114 @@
 import type { Profile } from "./types";
 
-/**
- * Данные профиля. Отображаются в шапке, секции «О себе», таймлайне и футере.
- */
 export const profile: Profile = {
   name: "Павел Кривопустов",
-  title: "Project / Growth Lead",
-  location: "Москва · офис, гибрид, удалёнка · готов к командировкам",
-  pitch:
-    "Веду направления роста от закупки трафика до аналитической инфраструктуры и автоматизации. Прошёл путь от media buyer и traffic-менеджера до Project / Growth Lead — собираю связку «трафик → CRM → данные → решения», где каждый канал усилен аналитикой и ботами. Сейчас запускаю SMS-маркетинговое направление с нуля.",
-  highlights: [
-    "прибыльность рекламных кабинетов ×10",
-    "конверсия входящего трафика +50%",
-    "SMS-направление с нуля",
-    "объём и качество лидов ↑ в несколько раз",
-    "BI: Power BI · DataLens · Tableau",
-    "5 лет в трафике, аналитике и росте",
+  nameLat: "PAVEL KRIVOPUSTOV",
+  titleLines: ["HEAD OF MARKETING", "HEAD OF GROWTH"],
+  role: "Growth / Marketing Lead",
+  subtitle:
+    "Growth / Marketing Lead с опытом запуска и масштабирования fintech-направлений.",
+  statement:
+    "Умею не только покупать трафик, но и менять инфраструктуру его поставки.",
+  location: "Москва · офис / гибрид / удалёнка · готов к командировкам",
+  availability: "Открыт к предложениям",
+
+  /* KEY METRICS — только проценты, кратность и объёмы. Без денежных сумм. */
+  metrics: [
+    { value: "×10", label: "масштабирование SMS-направления", count: 10, prefix: "×" },
+    { value: "−50%", label: "стоимость лида, CPL", count: 50, prefix: "−", suffix: "%" },
+    { value: "×2", label: "рост конверсии трафика", count: 2, prefix: "×" },
+    { value: "×2–3", label: "прибыльность ML-направления" },
+    { value: "50 000", label: "SMS в день", count: 50000, group: true },
+    { value: "150–200K", label: "заявок в месяц" },
+    { value: "~8%", label: "средний CTR", count: 8, prefix: "~", suffix: "%" },
+    { value: "1M+", label: "звонков в месяц" },
   ],
+
   skills: [
     {
-      title: "Рост и трафик",
+      index: "01",
+      title: "GROWTH",
       items: [
-        "Performance-маркетинг и медиабаинг",
-        "Закупка трафика, CPA, партнёрские сети",
-        "Лидогенерация и сегментация трафика",
-        "Сквозная аналитика и юнит-экономика канала",
-        "Прогнозирование входящего трафика",
-        "A/B-тесты и оптимизация воронки",
+        "Performance",
+        "CRM",
+        "SMS",
+        "Email",
+        "Acquisition",
+        "Retention",
+        "Lifecycle",
       ],
     },
     {
-      title: "CRM и жизненный цикл",
+      index: "02",
+      title: "DATA",
+      items: ["SQL", "Python", "Analytics", "BI", "Scoring", "ML", "Experimentation"],
+    },
+    {
+      index: "03",
+      title: "PRODUCT & TECH",
       items: [
-        "CRM-маркетинг: удержание, повторные конверсии, LTV",
-        "SMS-маркетинг: провайдеры, инфраструктура, KPI",
-        "Сегментация и скоринг клиентской базы",
-        "Автоматизация клиентских коммуникаций",
-        "Реактивация и работа с жизненным циклом клиента",
+        "CRM",
+        "API",
+        "Database",
+        "Automation",
+        "MVP",
+        "Roadmap",
+        "Tech specs",
       ],
     },
     {
-      title: "Данные и аналитика",
+      index: "04",
+      title: "MANAGEMENT",
       items: [
-        "SQL: MySQL, PostgreSQL, ClickHouse",
-        "Python: pandas, numpy",
-        "BI-дашборды: Power BI, Yandex DataLens, Tableau",
-        "Продуктовые метрики, statistical analysis",
-        "Яндекс.Метрика, Google Analytics",
-        "Перенос и оптимизация данных в DWH",
-      ],
-    },
-    {
-      title: "Проекты и автоматизация",
-      items: [
-        "Запуск направлений с нуля (0 → 1)",
-        "Координация аналитики, маркетинга, разработки, подрядчиков",
-        "Переговоры с партнёрами и провайдерами",
-        "API-интеграции: CRM ↔ SMS ↔ партнёрские сети",
-        "Телеграм-боты для автоматизации процессов и отчётности",
-        "Система KPI и мониторинг показателей, 1С-отчётность",
+        "Contractors",
+        "Partners",
+        "Developers",
+        "Analysts",
+        "KPI",
+        "Budgeting",
+        "Negotiations",
       ],
     },
   ],
-  timeline: [
+
+  approach: [
     {
-      period: "2026 — н.в.",
-      role: "Project / Growth Lead",
-      org: "ООО «ЛИДАР»",
-      note: "Запуск SMS-маркетингового направления с нуля: инфраструктура, интеграции CRM ↔ SMS ↔ партнёрские сети, система KPI, автоматизация коммуникаций.",
+      index: "01",
+      title: "UNDERSTAND",
+      text: "Разбираюсь в экономике, данных, воронке и ограничениях направления.",
     },
     {
-      period: "2023 — 2026",
-      role: "Data / Marketing Analyst",
-      org: "ООО «ЛСР» · финтех",
-      note: "Оптимизация закупки трафика и лидогенерации, скоринг базы и внедрение СПР, дашборды в трёх BI, перенос данных в DWH, автоматизация на телеграм-ботах.",
+      index: "02",
+      title: "BUILD",
+      text: "Собираю инфраструктуру, процессы и инструменты под задачу.",
     },
     {
-      period: "2023",
-      role: "Traffic Manager",
-      org: "ООО «ФИНБРО» · финтех",
-      note: "Прибыльность рекламных кабинетов ×10, запуск направления CRM-маркетинга, система прогнозирования входящего трафика.",
-    },
-    {
-      period: "2023",
-      role: "Media Buyer",
-      org: "ЛЕЙКА TEAM · маркетинг",
-      note: "Конверсия входящего трафика +50%, новые посадочные страницы, автоматизация управления трафиком.",
-    },
-    {
-      period: "2021 — 2022",
-      role: "Software Engineer",
-      org: "Элитек",
-      note: "Партнёрские интеграции и подключение продуктов, отчётность на 1С, автоматизация внутренних процессов, поддержка информационных систем.",
+      index: "03",
+      title: "SCALE",
+      text: "Тестирую, оптимизирую и масштабирую то, что уже работает.",
     },
   ],
+
   contacts: [
-    { label: "Телефон", value: "+7 917 834-98-94", url: "tel:+79178349894" },
-    { label: "Telegram", value: "@MainPavel", url: "https://t.me/MainPavel" },
-    { label: "Email", value: "krivopustov00@mail.ru", url: "mailto:krivopustov00@mail.ru" },
+    {
+      kind: "phone",
+      label: "Phone",
+      value: "+7 917 834-98-94",
+      href: "tel:+79178349894",
+      copy: "+79178349894",
+    },
+    {
+      kind: "telegram",
+      label: "Telegram",
+      value: "@MainPavel",
+      href: "https://t.me/MainPavel",
+    },
+    {
+      kind: "email",
+      label: "Email",
+      value: "krivopustov00@mail.ru",
+      href: "mailto:krivopustov00@mail.ru",
+      copy: "krivopustov00@mail.ru",
+    },
   ],
 };

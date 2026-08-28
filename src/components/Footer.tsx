@@ -5,14 +5,10 @@ export default function Footer({ name }: { name: string }) {
   return (
     <footer className="footer">
       <div className="container footer__inner">
-        <span className="mono">
-          © {year} {name} · собрано вручную
-        </span>
-        <span className="mono footer__sys">
-          SYS.STATUS: <b>ONLINE</b> · {year}.Q3
-        </span>
-        <a href="#top" className="mono footer__top">
-          ↑ наверх
+        <span className="tech">© {year} {name}</span>
+        <span className="tech footer__mid">MARKETING · DATA · TECHNOLOGY</span>
+        <a href="#top" className="tech footer__top">
+          Наверх ↑
         </a>
       </div>
     </footer>

@@ -1,28 +1,47 @@
 import { useEffect } from "react";
 
 /**
- * Навешивает появление при прокрутке на все элементы `.reveal`
- * внутри документа. Один общий IntersectionObserver.
+ * Один общий IntersectionObserver: добавляет `.in` элементам `.reveal`
+ * при попадании во вьюпорт. Наблюдает и за элементами, добавленными позже.
  */
 export function useReveal() {
   useEffect(() => {
-    const els = Array.from(document.querySelectorAll<HTMLElement>(".reveal"));
-    if (!("IntersectionObserver" in window) || els.length === 0) {
-      els.forEach((el) => el.classList.add("is-visible"));
+    if (!("IntersectionObserver" in window)) {
+      document
+        .querySelectorAll(".reveal")
+        .forEach((el) => el.classList.add("in"));
       return;
     }
+
     const io = new IntersectionObserver(
       (entries) => {
         for (const e of entries) {
           if (e.isIntersecting) {
-            e.target.classList.add("is-visible");
+            e.target.classList.add("in");
             io.unobserve(e.target);
           }
         }
       },
-      { threshold: 0.12, rootMargin: "0px 0px -8% 0px" },
+      { threshold: 0.12, rootMargin: "0px 0px -6% 0px" },
     );
-    els.forEach((el) => io.observe(el));
-    return () => io.disconnect();
+
+    const seen = new WeakSet<Element>();
+    const scan = () => {
+      document.querySelectorAll(".reveal:not(.in)").forEach((el) => {
+        if (!seen.has(el)) {
+          seen.add(el);
+          io.observe(el);
+        }
+      });
+    };
+    scan();
+
+    const mo = new MutationObserver(scan);
+    mo.observe(document.body, { childList: true, subtree: true });
+
+    return () => {
+      io.disconnect();
+      mo.disconnect();
+    };
   }, []);
 }

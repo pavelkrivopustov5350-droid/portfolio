@@ -1,77 +1,107 @@
 /**
- * Типы данных портфолио.
- * Весь контент сайта описывается объектами этих типов в файлах
- * `profile.ts` и `projects.ts`. Больше нигде тексты править не нужно.
+ * Типы контента. Весь текст сайта — в `profile.ts`, `cases.ts`, `experience.ts`.
+ * Компоненты не редактируем ради контента.
  */
 
-export interface CaseMetric {
-  label: string;
+export interface Metric {
+  /** Отображаемое значение: "×10", "−50%", "50 000", "150–200K". */
   value: string;
-  /** Динамика: положительная / отрицательная / нейтральная. */
-  trend?: "up" | "down" | "flat";
-  hint?: string;
+  label: string;
+  /** Целое число для счётчика при появлении. Если не задано — значение статично. */
+  count?: number;
+  /** Приставка / суффикс вокруг счётчика ("×", "−", "%"). */
+  prefix?: string;
+  suffix?: string;
+  /** Разделять счётчик тонкими пробелами по тысячам. */
+  group?: boolean;
 }
 
-export interface CaseBlock {
-  /** Заголовок смыслового блока кейса. */
-  heading: string;
-  /** Абзацы текста. Поддерживается только простой текст. */
-  body: string[];
-  /** Необязательный список пунктов под текстом. */
-  bullets?: string[];
+export interface PipelineData {
+  title: string;
+  steps: string[];
+  /** Первые N шагов — параллельные входы, сходящиеся в шаг N. */
+  merge?: number;
+  /** Дорисовать петлю обратной связи от последнего шага. */
+  loop?: boolean;
+  loopLabel?: string;
 }
 
 export interface CaseStudy {
   id: string;
-  title: string;
-  /** Роль в проекте. */
-  role: string;
-  /** Период, напр. "2023 — 2024". */
-  period: string;
-  /** Компания / контекст. */
-  org: string;
-  /** Одно предложение — суть кейса. */
-  tagline: string;
-  /** Теги стека и подходов. */
-  tags: string[];
-  /** Ключевые цифры результата. */
-  metrics: CaseMetric[];
-  /** Контекст → задача → действия → результат. */
-  blocks: CaseBlock[];
-  /** id связанных кейсов — блок «Связанные проекты» внизу. */
-  related?: string[];
-  /** Ссылки: демо, статья, деку. */
-  links?: { label: string; url: string }[];
-  /** Акцентный цвет кейса (hex). По умолчанию — из темы. */
-  accent?: string;
+  index: string; // "01"
+  name: string; // "SMS Growth Engine"
+  company: string;
+  categories: string[];
+  summary: string;
+  /** 1–2 метрики на карточке. */
+  headline: Metric[];
+  /** Полный список метрик в раскрытом кейсе. */
+  metrics: Metric[];
+  challenge: string;
+  approach: string[];
+  result: string[];
+  team?: string[];
+  pipeline?: PipelineData;
+  quote?: string;
 }
 
-export interface TimelineEntry {
+export interface SubProject {
+  name: string;
+  kind: string;
+  url?: string;
+  metrics: Metric[];
+  bullets: string[];
+}
+
+export interface ExperienceItem {
+  id: string;
   period: string;
+  company: string;
   role: string;
-  org: string;
-  note: string;
+  location?: string;
+  summary: string;
+  /** Показывается в свёрнутом виде. */
+  highlights: string[];
+  /** Раскрывается по клику. */
+  details?: string[];
+  /** Подпроекты (для LSR). */
+  projects?: SubProject[];
+  /** id кейсов, к которым ведёт эта роль. */
+  relatedCases?: string[];
 }
 
 export interface SkillGroup {
+  index: string;
   title: string;
   items: string[];
 }
 
-export interface Profile {
-  name: string;
+export interface ApproachStep {
+  index: string;
   title: string;
-  location: string;
-  /** Питч в 2–3 предложения для верхнего экрана. */
-  pitch: string;
-  /** Короткие факты-достижения для бегущей строки под питчем. */
-  highlights: string[];
-  skills: SkillGroup[];
-  timeline: TimelineEntry[];
-  contacts: { label: string; value: string; url: string }[];
+  text: string;
 }
 
-export interface PortfolioData {
-  profile: Profile;
-  cases: CaseStudy[];
+export interface Contact {
+  kind: "phone" | "telegram" | "email";
+  label: string;
+  value: string;
+  href: string;
+  /** Значение для копирования в буфер. */
+  copy?: string;
+}
+
+export interface Profile {
+  name: string;
+  nameLat: string;
+  titleLines: string[];
+  role: string;
+  subtitle: string;
+  statement: string;
+  location: string;
+  availability: string;
+  metrics: Metric[];
+  skills: SkillGroup[];
+  approach: ApproachStep[];
+  contacts: Contact[];
 }

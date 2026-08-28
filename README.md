@@ -1,75 +1,82 @@
-# Портфолио — Павел Кривопустов · Project / Growth Lead
+# Портфолио — Павел Кривопустов · Head of Marketing / Head of Growth
 
-Одностраничный сайт-резюме в тёмной сай-фай теме. Кейсы по каждой роли
-открываются боковой панелью, ссылка вида `…/#/case/<id>`.
+Одностраничный сайт-портфолио в тёмной минималистичной sci-fi / fintech эстетике.
+Прогрессивное раскрытие: на первом уровне — суть и цифры, детали открываются по клику.
 
 Live: **https://pavelkrivopustov5350-droid.github.io/portfolio/**
 
-Стек: **Vite + React + TypeScript**. Внешних рантайм-зависимостей на страницах нет
-(шрифты — Google Fonts).
+Стек: **Vite + React + TypeScript**, чистый CSS с дизайн-токенами. Без тяжёлых
+библиотек — анимации на CSS + IntersectionObserver. Шрифты — Google Fonts
+(Inter, Space Grotesk, JetBrains Mono).
 
 ## Запуск
 
 ```bash
 npm install
-npm run dev        # http://localhost:5173 — режим разработки
+npm run dev        # http://localhost:5173
 npm run build      # сборка в dist/
-npm run preview    # посмотреть собранную версию
+npm run preview    # предпросмотр сборки
 npm run typecheck  # проверка типов
 ```
 
 Нужен Node 18+.
 
+## Структура секций
+
+`Hero → Impact / Key Metrics → Cases → Experience → Skills → Approach → Contact`
+
 ## Где править контент
 
-Весь текст сайта — в `src/data/`. Больше нигде трогать не нужно.
+Весь текст — в `src/data/`:
 
 | Файл | Что внутри |
 | --- | --- |
-| `src/data/profile.ts` | Имя, роль, питч на первом экране, навыки, опыт (таймлайн), контакты |
-| `src/data/projects.ts` | `cases` — подробные кейсы по ролям |
-| `src/data/types.ts` | Описание всех полей (справочник, менять не обязательно) |
+| `src/data/profile.ts` | Имя, титул, питч, ключевые метрики, карта навыков, подход, контакты |
+| `src/data/cases.ts` | 4 главных кейса: метрики, challenge / approach / result, команда, pipeline-схема |
+| `src/data/experience.ts` | Таймлайн ролей + подпроекты LSR (FinBro, SMSLeads, CRMCalls, MoreZaim, LeadFin) |
+| `src/data/types.ts` | Описание всех полей |
 
-### Добавить кейс
+### Метрики
 
-1. В `src/data/projects.ts` добавь объект в массив `cases` (скопируй соседний как шаблон).
-   Обязательные поля: `id`, `title`, `role`, `period`, `org`, `tagline`, `tags`,
-   `metrics`, `blocks`. Необязательные: `related`, `links`, `accent`.
-2. Кейс сразу появится в секции «Кейсы» и будет открываться по прямой ссылке
-   `…/#/case/<id>`.
+`Metric.count` включает счётчик, который «набегает» при появлении:
+`{ value: "×10", count: 10, prefix: "×", label: "…" }`. Без `count` — статичное значение.
+В цифрах — только проценты, ROI, кратность и объёмы. Денежных сумм на сайте нет.
 
-### Поменять цвета / шрифты
+### Pipeline-схема в кейсе
 
-`src/styles/theme.css` — все переменные темы (фон, акценты, свечение, типографика).
+`pipeline: { title, steps: [...], merge?: 2, loop?: true, loopLabel?: "…" }` —
+вертикальная технологическая схема. `merge` — первые N шагов как параллельные входы,
+`loop` — замыкающий узел обратной связи.
+
+### Тема
+
+`src/styles/tokens.css` — все переменные (цвета, радиусы, типографика, тайминги).
+Акцент — `--accent` (electric blue).
+
+## Компоненты
+
+```
+components/
+  Backdrop        сдержанный фон: редкие точки + связи
+  Header          навигация, active-секция, мобильное меню
+  Hero / HeroViz  первый экран + минимальная SVG-визуализация
+  Metrics / Stat  ключевые цифры со счётчиком
+  Cases / CaseStudy / Pipeline   главный блок, раскрывающиеся кейсы
+  Experience      таймлайн + подпроекты LSR
+  Skills / Approach / Contact / Footer
+hooks/
+  useReveal        появление при прокрутке
+  useCountUp        счётчик чисел
+  useActiveSection  подсветка активного пункта меню
+  useScrollLock     блокировка прокрутки под мобильным меню
+```
 
 ## Деплой
 
-Сборка статическая, `base` = `./`, поэтому кладётся куда угодно.
-
-- **GitHub Pages**: настроен через `.github/workflows/deploy.yml` — при каждом push
-  в `main` собирается и публикуется на `https://<user>.github.io/portfolio/`.
-  Один раз нужно: Settings → Pages → Source → **GitHub Actions**.
-- **Netlify / Vercel**: подключить репозиторий, build `npm run build`, publish `dist`.
-- **Любой хостинг**: залить содержимое `dist/`.
-
-## Структура
-
-```
-src/
-  data/         контент (профиль, кейсы)
-  components/
-    Backdrop        живой фон (частицы + радар-развёртка)
-    Nav / Hero      шапка и первый экран
-    CaseIndex       сетка карточек кейсов
-    CasePanel       боковая панель с полным кейсом
-    About / Timeline / Contact / Footer
-    ui/             мелкие примитивы (Metric, Tag, GlitchText)
-  hooks/          useHashRoute (ссылки на кейсы), useReveal (появление при скролле)
-  styles/         theme.css + global.css
-```
+Сборка статическая, `base: './'`. GitHub Pages настроен через
+`.github/workflows/deploy.yml` — пересобирается при каждом push в `main`.
 
 ## Доступность
 
-- Уважается `prefers-reduced-motion` — анимации фона замирают.
-- Контент подгружается с появлением при прокрутке; без JS кейсы не откроются
-  (обычный SPA).
+`prefers-reduced-motion` — фон и счётчики замирают. Раскрытия закрываются по `Esc`.
+Фокус-состояния у всех интерактивных элементов. Без JS кейсы не раскроются (обычный SPA).

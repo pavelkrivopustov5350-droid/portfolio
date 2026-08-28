@@ -1,10 +1,10 @@
-/* тонкий разделитель между секциями */
-.section + .section::before {
+/* section dividers — a barely-there hairline between sections */
+main > .section + .section::before {
   content: "";
   position: absolute;
   top: 0;
-  left: var(--gutter);
-  right: var(--gutter);
+  left: var(--pad-x);
+  right: var(--pad-x);
   height: 1px;
-  background: linear-gradient(90deg, var(--border), transparent 70%);
+  background: linear-gradient(90deg, var(--border), transparent 65%);
 }

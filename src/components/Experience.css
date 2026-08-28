@@ -1,0 +1,242 @@
+.exp-timeline {
+  list-style: none;
+  position: relative;
+  margin: 0;
+  padding: 0;
+}
+.exp-timeline::before {
+  content: "";
+  position: absolute;
+  left: 5px;
+  top: 8px;
+  bottom: 8px;
+  width: 1px;
+  background: linear-gradient(var(--accent-line), var(--border) 60%, transparent);
+}
+
+.exp {
+  position: relative;
+  display: grid;
+  grid-template-columns: 130px minmax(0, 1fr);
+  gap: 22px;
+  padding-left: 30px;
+  padding-bottom: 16px;
+}
+.exp:last-child {
+  padding-bottom: 0;
+}
+
+.exp__node {
+  position: absolute;
+  left: 0;
+  top: 6px;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: var(--bg);
+  border: 1px solid var(--accent-line);
+}
+.exp.is-open .exp__node {
+  background: var(--accent);
+  box-shadow: var(--accent-glow);
+}
+
+.exp__period {
+  padding-top: 6px;
+  color: var(--text-muted);
+}
+
+.exp__card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-sm);
+  padding: 20px 22px;
+  transition: border-color var(--dur-fast) var(--ease);
+}
+.exp.is-open .exp__card {
+  border-color: var(--border-strong);
+}
+
+.exp__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  width: 100%;
+  text-align: left;
+}
+.exp__head:disabled {
+  cursor: default;
+}
+.exp__role {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.06rem;
+  color: var(--text);
+}
+.exp__company {
+  margin-top: 3px;
+  font-size: 0.86rem;
+  color: var(--text-muted);
+}
+.exp__loc {
+  color: var(--text-faint);
+}
+.exp__toggle {
+  flex: none;
+  width: 26px;
+  height: 26px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  font-family: var(--font-mono);
+  color: var(--text-muted);
+}
+
+.exp__summary {
+  margin-top: 12px;
+  color: var(--text-muted);
+  font-size: 0.92rem;
+  line-height: 1.55;
+  max-width: 62ch;
+}
+
+.exp__highlights {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 12px;
+}
+.exp__highlights li {
+  position: relative;
+  padding-left: 18px;
+  font-size: 0.88rem;
+  color: var(--text);
+}
+.exp__highlights li::before {
+  content: "›";
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+}
+
+.exp__detail {
+  margin-top: 18px;
+  padding-top: 18px;
+  border-top: 1px solid var(--border);
+  animation: cs-in 0.4s var(--ease) both;
+}
+
+.exp__list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  max-width: 66ch;
+}
+.exp__list li {
+  position: relative;
+  padding-left: 18px;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  line-height: 1.55;
+}
+.exp__list li::before {
+  content: "";
+  position: absolute;
+  left: 2px;
+  top: 0.62em;
+  width: 4px;
+  height: 4px;
+  border-radius: 1px;
+  background: var(--text-faint);
+}
+
+/* ---------- LSR sub-projects ---------- */
+.exp__projects {
+  margin-top: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.exp__projects-label {
+  color: var(--accent);
+  margin-bottom: 4px;
+}
+
+.proj {
+  border: 1px solid var(--border);
+  border-radius: var(--r-xs);
+  background: var(--surface-2);
+  transition: border-color var(--dur-fast) var(--ease);
+}
+.proj.is-open {
+  border-color: var(--accent-line);
+}
+.proj__head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 13px 16px;
+  text-align: left;
+}
+.proj__name {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--text);
+}
+.proj__kind {
+  font-size: 0.78rem;
+  color: var(--text-faint);
+  margin-right: auto;
+}
+.proj__toggle {
+  font-family: var(--font-mono);
+  color: var(--text-muted);
+}
+.proj__body {
+  padding: 4px 16px 18px;
+  animation: cs-in 0.35s var(--ease) both;
+}
+.proj__metrics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 22px;
+  margin-bottom: 14px;
+}
+.proj__metrics > div {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.proj__mv {
+  font-family: var(--font-display);
+  font-weight: 600;
+  color: var(--text);
+  font-size: 1rem;
+}
+.proj__ml {
+  font-size: 0.7rem;
+  color: var(--text-faint);
+}
+.proj__link {
+  display: inline-block;
+  margin-top: 12px;
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  color: var(--accent-bright);
+}
+
+@media (max-width: 700px) {
+  .exp {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  .exp__period {
+    padding-top: 0;
+  }
+}
