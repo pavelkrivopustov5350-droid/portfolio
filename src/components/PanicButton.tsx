@@ -64,25 +64,25 @@ export default function PanicButton() {
             stage === "crash" ? "panic--crash" : "panic--video"
           }`}
         >
-          {/* iframe монтируется сразу — стартует в момент клика, звук слышен уже во время «краша» */}
-          <div className="panic__player">
-            <button
-              className="panic__close"
-              onClick={close}
-              aria-label="Закрыть"
-            >
-              ×
-            </button>
-            <div className="panic__frame">
-              <iframe
-                src={VIDEO}
-                title="video"
-                allow="autoplay; encrypted-media; fullscreen"
-                allowFullScreen
-              />
+          {stage === "video" && (
+            <div className="panic__player">
+              <button
+                className="panic__close"
+                onClick={close}
+                aria-label="Закрыть"
+              >
+                ×
+              </button>
+              <div className="panic__frame">
+                <iframe
+                  src={VIDEO}
+                  title="video"
+                  allow="autoplay; encrypted-media; fullscreen"
+                  allowFullScreen
+                />
+              </div>
             </div>
-            <p className="panic__caption">тебя предупреждали 🙃</p>
-          </div>
+          )}
 
           {stage === "crash" && (
             <div className="panic__crash" aria-hidden="true">

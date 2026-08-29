@@ -2,7 +2,7 @@
 .panic-cta {
   display: flex;
   justify-content: center;
-  padding: clamp(56px, 12vh, 120px) var(--pad-x);
+  padding: clamp(48px, 9vh, 88px) var(--pad-x);
   border-top: 1px solid var(--border);
   background: var(--bg-2);
 }
@@ -270,16 +270,6 @@ body.is-panicking #root {
   position: relative;
   width: min(900px, 92vw);
   z-index: 2;
-}
-.panic--crash .panic__player {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  opacity: 0;
-  pointer-events: none;
-  overflow: hidden;
-}
-.panic--video .panic__player {
   animation: panic-pop 0.42s var(--ease) both;
 }
 @keyframes panic-pop {
@@ -328,14 +318,6 @@ body.is-panicking #root {
 }
 .panic__close:hover {
   transform: scale(1.1) rotate(90deg);
-}
-
-.panic__caption {
-  margin-top: 18px;
-  text-align: center;
-  font-family: var(--font-mono);
-  font-size: 0.85rem;
-  color: var(--text-muted);
 }
 
 @media (max-width: 560px) {

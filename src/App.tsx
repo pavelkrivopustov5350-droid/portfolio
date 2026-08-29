@@ -35,8 +35,8 @@ export default function App() {
         <Contact contacts={profile.contacts} />
       </main>
 
-      <Footer name={profile.name} />
       <PanicButton />
+      <Footer name={profile.name} />
     </>
   );
 }
