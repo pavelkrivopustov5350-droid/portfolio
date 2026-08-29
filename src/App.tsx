@@ -12,6 +12,7 @@ import About from "./components/About";
 import Approach from "./components/Approach";
 import Contact from "./components/Contact";
 import Footer from "./components/Footer";
+import PanicButton from "./components/PanicButton";
 import "./App.css";
 
 export default function App() {
@@ -35,6 +36,7 @@ export default function App() {
       </main>
 
       <Footer name={profile.name} />
+      <PanicButton />
     </>
   );
 }
