@@ -1,10 +1,18 @@
 /* ---------- red button ---------- */
 .panic-cta {
+  position: relative;
   display: flex;
   justify-content: center;
   padding: clamp(48px, 9vh, 88px) var(--pad-x);
-  border-top: 1px solid var(--border);
-  background: var(--bg-2);
+}
+.panic-cta::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: var(--pad-x);
+  right: var(--pad-x);
+  height: 1px;
+  background: linear-gradient(90deg, var(--border), transparent 65%);
 }
 
 .panic-btn {
